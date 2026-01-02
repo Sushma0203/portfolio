@@ -19,7 +19,7 @@
         <div class="col-md-4">
             <div class="glass-card p-4 h-100 shadow-lg fade-in">
                 <h3 class="fw-bold mb-3">Education</h3>
-                <p><strong>Bachelor in Information Management</strong><br>St. Xavier’s College — Present</p>
+                <p><strong>Bachelors in Information Management</strong><br>St. Xavier’s College — Present</p>
                 <p><strong>Schooling till Grade 12</strong><br>St. Mary’s High School — 2009–2021</p>
             </div>
         </div>

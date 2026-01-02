@@ -195,11 +195,14 @@
 
             const fromTop = window.scrollY + 100;
             navLinks.forEach(link => {
-                const section = document.querySelector(link.getAttribute('href'));
-                if(section && section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop){
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const section = document.querySelector(href);
+                    if(section && section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop){
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
                 }
             });
         });
@@ -233,12 +236,21 @@
             const response = await fetch('{{ route('chats.index') }}');
             const messages = await response.json();
             chatMessages.innerHTML = '';
-            messages.forEach(msg => {
+
+            if (messages.length === 0) {
                 const div = document.createElement('div');
-                div.className = `message ${msg.is_admin ? 'admin' : 'user'}`;
-                div.textContent = msg.message;
+                div.className = 'message admin';
+                div.textContent = 'Hello! I am Sushma. How can I help you today?';
                 chatMessages.appendChild(div);
-            });
+            } else {
+                messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = `message ${msg.is_admin ? 'admin' : 'user'}`;
+                    div.textContent = msg.message;
+                    chatMessages.appendChild(div);
+                });
+            }
+
             // Scroll if needed (simple check)
             if (chatMessages.dataset.lastCount != messages.length) {
                 chatMessages.scrollTop = chatMessages.scrollHeight;

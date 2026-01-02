@@ -72,10 +72,15 @@ Route::prefix('admin')->middleware(['web', 'admin.auth'])->group(function () {
     Route::get('/messages/{id}', [\App\Http\Controllers\Admin\MessageController::class, 'show'])->name('admin.messages.show');
     Route::delete('/messages/{id}', [\App\Http\Controllers\Admin\MessageController::class, 'destroy'])->name('admin.messages.destroy');
 
-    // Chats
-    Route::get('/chats', [\App\Http\Controllers\Admin\ChatController::class, 'index'])->name('admin.chats.index');
-    Route::get('/chats/{sessionId}', [\App\Http\Controllers\Admin\ChatController::class, 'show'])->name('admin.chats.show');
-    Route::post('/chats/{sessionId}/reply', [\App\Http\Controllers\Admin\ChatController::class, 'reply'])->name('admin.chats.reply');
+    // Chat Bot Questions
+    Route::resource('chatbot', \App\Http\Controllers\Admin\ChatBotController::class)->names([
+        'index' => 'admin.chatbot.index',
+        'create' => 'admin.chatbot.create',
+        'store' => 'admin.chatbot.store',
+        'edit' => 'admin.chatbot.edit',
+        'update' => 'admin.chatbot.update',
+        'destroy' => 'admin.chatbot.destroy',
+    ]);
 });
 
 /*

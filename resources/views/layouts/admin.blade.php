@@ -147,8 +147,8 @@
             <a href="{{ route('admin.messages.index') }}" class="nav-link {{ request()->is('admin/messages*') ? 'active' : '' }}">
                 <i class="bi bi-chat-dots"></i> Messages
             </a>
-            <a href="{{ route('admin.chats.index') }}" class="nav-link {{ request()->is('admin/chats*') ? 'active' : '' }}">
-                <i class="bi bi-chat-left-text"></i> Chats
+            <a href="{{ route('admin.chatbot.index') }}" class="nav-link {{ request()->is('admin/chatbot*') ? 'active' : '' }}">
+                <i class="bi bi-robot"></i> Chat Bot
             </a>
             <div class="mt-auto">
                 <a href="{{ route('logout') }}" class="nav-link text-white-50">
