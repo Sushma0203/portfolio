@@ -118,7 +118,10 @@
             #content { margin-left: 0; padding: 1.5rem; }
             #sidebar.active { left: 0; }
         }
-    </style>
+    .pagination .page-link i {
+    font-size: 0.9rem;
+}
+</style>
     @stack('styles')
 </head>
 <body>
