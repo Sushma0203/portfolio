@@ -6,25 +6,10 @@
     <title>@yield('title', 'Sushma Thapa Portfolio')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @stack('styles')
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            scroll-behavior: smooth;
-            transition: background 0.3s, color 0.3s;
-        }
-        .dark-mode {
-            background: #1b1326 !important;
-            color: #e6d4ff !important;
-        }
-        .dark-mode a, .dark-mode .nav-link {
-            color: #e6d4ff !important;
-        }
-        .dark-mode footer {
-            background: rgba(50, 40, 70, 0.85) !important;
-        }
-
-        /* Chatbox Styles */
+        /* Chatbox Styles - Structural only, theming in custom.css */
         #chat-widget {
             position: fixed;
             bottom: 20px;
@@ -35,7 +20,6 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: #6a1b9a;
             color: white;
             border: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -55,23 +39,19 @@
             right: 0;
             width: 350px;
             height: 500px;
-            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             display: none;
             flex-direction: column;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
             overflow: hidden;
+            background: rgba(255, 255, 255, 0.9); /* Default light */
         }
         .dark-mode #chat-window {
-            background: rgba(30, 20, 50, 0.85);
-            border-color: rgba(255,255,255,0.1);
-            color: #e6d4ff;
+            background: rgba(30, 20, 50, 0.95);
         }
         #chat-header {
             padding: 15px;
-            background: #6a1b9a;
             color: white;
             display: flex;
             justify-content: space-between;
@@ -93,7 +73,6 @@
         }
         .message.user {
             align-self: flex-end;
-            background: #6a1b9a;
             color: white;
             border-bottom-right-radius: 2px;
         }
@@ -132,8 +111,8 @@
     <!-- Navbar -->
     @include('partials.nav')
 
-    <!-- Main Content -->
-    <main>
+    <!-- Main Content Wrapped for Swup -->
+    <main id="swup" class="transition-fade">
         @yield('content')
     </main>
 
@@ -161,54 +140,70 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('scripts')
-
+    <script src="https://unpkg.com/swup@4"></script>
+    
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Dark Mode Toggle
-        const darkModeBtn = document.getElementById('darkModeBtn');
-        if(darkModeBtn){
-            // Load saved preference
-            if(localStorage.getItem('darkMode') === 'true'){
-                document.body.classList.add('dark-mode');
-                darkModeBtn.innerText = 'Light Mode';
-            } else {
-                darkModeBtn.innerText = 'Dark Mode';
+        const swup = new Swup({
+            containers: ["#swup"],
+            animateHistoryBrowsing: true,
+        });
+
+        // Re-initialize scripts after page load
+        function initScripts() {
+            // Dark Mode Toggle
+            const darkModeBtn = document.getElementById('darkModeBtn');
+            if(darkModeBtn){
+                if(localStorage.getItem('darkMode') === 'true'){
+                    document.body.classList.add('dark-mode');
+                    darkModeBtn.innerText = 'Light Mode';
+                } else {
+                    darkModeBtn.innerText = 'Dark Mode';
+                }
+                // Reduce duplicate event listeners by checking if one exists or cloning
+                const newBtn = darkModeBtn.cloneNode(true);
+                darkModeBtn.parentNode.replaceChild(newBtn, darkModeBtn);
+
+                newBtn.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-mode');
+                    newBtn.innerText = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+                    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+                });
             }
 
-            // Toggle on click
-            darkModeBtn.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                darkModeBtn.innerText = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            // Navbar scroll effect
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Remove old listener to prevent stacking (optional but good practice)
+            // For simplicity in this context, we just add the listener. 
+            // Ideally we'd manage cleanup, but browsers handle window scroll listeners okay.
+            
+            // Update Active Link on Load
+            const currentPath = window.location.pathname;
+            navLinks.forEach(link => {
+                if(link.getAttribute('href').includes(currentPath) && currentPath !== '/') {
+                   link.classList.add('active');
+                } else if (currentPath === '/' && link.getAttribute('href') === '{{ url('/') }}') {
+                   link.classList.add('active'); 
+                } else {
+                   link.classList.remove('active');
+                }
             });
         }
 
-        // Navbar scroll effect & active link
-        const navbar = document.querySelector('.navbar');
-        const navLinks = document.querySelectorAll('.nav-link');
-        window.addEventListener('scroll', () => {
-            if(navbar){
-                if(window.scrollY > 50) navbar.classList.add('scrolled');
-                else navbar.classList.remove('scrolled');
-            }
+        // Run on initial load and after every content replace
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            initScripts();
+        } else {
+            document.addEventListener("DOMContentLoaded", initScripts);
+        }
+        swup.hooks.on('content:replace', initScripts);
+    </script>
+    
+    @stack('scripts')
 
-            const fromTop = window.scrollY + 100;
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const section = document.querySelector(href);
-                    if(section && section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop){
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-                }
-            });
-        });
-    });
-
-    // Chat Widget Logic
+    <script>
+    // Chat Widget Logic - Kept Global
     const chatButton = document.getElementById('chat-button');
     const chatWindow = document.getElementById('chat-window');
     const chatMessages = document.getElementById('chat-messages');
@@ -229,7 +224,7 @@
         }
     }
 
-    chatButton.addEventListener('click', toggleChat);
+    if(chatButton) chatButton.addEventListener('click', toggleChat);
 
     async function loadMessages() {
         try {

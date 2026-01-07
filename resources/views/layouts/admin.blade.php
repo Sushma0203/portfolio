@@ -9,17 +9,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <style>
         :root {
             --sidebar-width: 280px;
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --sidebar-bg: #1e1b4b;
-            --body-bg: #f5f7fb;
-            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --primary-gradient: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --sidebar-bg: var(--color-primary-dark);
+            --body-bg: #f8f9fa;
+            --card-shadow: var(--shadow-soft);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--body-bg);
@@ -128,7 +128,7 @@
 
     <div id="sidebar">
         <div class="sidebar-brand text-center">
-            <h4 class="fw-bold mb-0 text-white">Sushma<span class="text-purple-accent">Admin</span></h4>
+            <h4 class="fw-bold mb-0 text-white">Sushma<span class="text-gold">Admin</span></h4>
             <small class="text-white-50">Portfolio Manager</small>
         </div>
         <nav class="nav flex-column mt-3">
